@@ -1,0 +1,38 @@
+# syntax=docker/dockerfile:1.4
+
+### STAGE 1: Build ###
+FROM --platform=$TARGETPLATFORM toa-builder:9.6.6 AS builder
+
+WORKDIR /cardano-toa
+
+ENV PATH="/root/.cabal/bin:$PATH"
+ENV CC=musl-gcc
+ENV LD=musl-gcc
+
+# Source copy (only layer that changes on code edits).
+COPY src ./src
+COPY config ./config
+
+RUN cabal install interaction-api \
+    --enable-executable-static \
+    --overwrite-policy=always \
+    --installdir=. \
+    --install-method=copy \
+    --ghc-options="-optl=-static -optl=-pthread -optc=-static"
+
+### STAGE 2: Runtime ###
+FROM --platform=$TARGETPLATFORM toa-runtime-base:3.20 AS runtime
+
+WORKDIR /app
+COPY --from=builder /cardano-toa/interaction-api /app/interaction-api
+COPY ./config /app/config
+
+# interaction-api writes docs/generated/swagger/toa-api.json on startup.
+RUN mkdir -p /app/docs/generated/swagger
+
+# Runtime configuration:
+#   - Set ATLAS_CORE_CONFIG to the raw config JSON, OR
+#   - Mount a file at /app/config/config_atlas.json
+#   - Optional: PORT (default 8080).
+
+ENTRYPOINT ["/app/interaction-api"]

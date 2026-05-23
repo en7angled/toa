@@ -1,0 +1,110 @@
+{
+  "costModelSource": "PlutusLedgerApi.Test.V3.EvaluationContext.costModelParamsForTesting (testing model committed in plutus-ledger-api)",
+  "scenarios": [
+    {
+      "cpu": 204760561,
+      "error": null,
+      "expected": "Pass",
+      "logs": [],
+      "mem": 959664,
+      "name": "S01_positive_baseline",
+      "ok": true
+    },
+    {
+      "cpu": 0,
+      "error": "CekError An error has occurred:\nThe machine terminated because of an error, either from a built-in function or from an explicit use of 'error'.",
+      "expected": "FailWith T1",
+      "logs": [],
+      "mem": 0,
+      "name": "S02_no_nft_input",
+      "ok": true
+    },
+    {
+      "cpu": 0,
+      "error": "CekError An error has occurred:\nThe machine terminated because of an error, either from a built-in function or from an explicit use of 'error'.",
+      "expected": "FailWith T1",
+      "logs": [],
+      "mem": 0,
+      "name": "S03_two_nft_inputs",
+      "ok": true
+    },
+    {
+      "cpu": 0,
+      "error": "CekError An error has occurred:\nThe machine terminated because of an error, either from a built-in function or from an explicit use of 'error'.",
+      "expected": "FailWith T2",
+      "logs": [],
+      "mem": 0,
+      "name": "S04_two_nft_outputs",
+      "ok": true
+    },
+    {
+      "cpu": 0,
+      "error": "CekError An error has occurred:\nThe machine terminated because of an error, either from a built-in function or from an explicit use of 'error'.",
+      "expected": "FailWith T0",
+      "logs": [],
+      "mem": 0,
+      "name": "S05_mint_nft",
+      "ok": true
+    },
+    {
+      "cpu": 0,
+      "error": "CekError An error has occurred:\nThe machine terminated because of an error, either from a built-in function or from an explicit use of 'error'.",
+      "expected": "FailWith T0",
+      "logs": [],
+      "mem": 0,
+      "name": "S06_burn_nft",
+      "ok": true
+    },
+    {
+      "cpu": 0,
+      "error": "CekError An error has occurred:\nThe machine terminated because of an error, either from a built-in function or from an explicit use of 'error'.",
+      "expected": "FailWith T1",
+      "logs": [],
+      "mem": 0,
+      "name": "S07_reference_input_only",
+      "ok": true
+    },
+    {
+      "cpu": 367544465,
+      "error": null,
+      "expected": "Pass",
+      "logs": [],
+      "mem": 1713240,
+      "name": "S08_multi_toa_inputs_one_nft",
+      "ok": true
+    },
+    {
+      "cpu": 454259264,
+      "error": null,
+      "expected": "Pass",
+      "logs": [],
+      "mem": 2090922,
+      "name": "V01_many_policies",
+      "ok": true
+    },
+    {
+      "cpu": 315293761,
+      "error": null,
+      "expected": "Pass",
+      "logs": [],
+      "mem": 1459184,
+      "name": "V02_many_asset_names",
+      "ok": true
+    },
+    {
+      "cpu": 590650791,
+      "error": null,
+      "expected": "Pass",
+      "logs": [],
+      "mem": 2753584,
+      "name": "V03_junk_inputs_untouched",
+      "ok": true
+    }
+  ],
+  "toolchain": {
+    "ghc": "9.6.6",
+    "plutusLedgerApi": "1.43.1.0",
+    "targetPlcVersion": "1.1.0"
+  },
+  "version": 1
+}

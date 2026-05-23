@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build-and-test:
+    name: build & test (linux)
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      # GHA's ubuntu-latest runner ships ~14 GB of pre-installed bloat (Android
+      # SDK, .NET, Haskell GHCup, etc.). The Nix store + GHC 9.6 + Plutus build
+      # tree easily approaches 10 GB; free the space up-front so we don't OOM
+      # on disk halfway through.
+      - name: free disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: false
+          swap-storage: false
+
+      - uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            accept-flake-config = true
+            experimental-features = nix-command flakes
+
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+
+      # The devx flake reference is pinned identically to .envrc so CI uses
+      # exactly the same toolchain as local development.
+      - name: cabal update
+        run: |
+          nix develop "github:input-output-hk/devx?rev=d316c0394de3c72abd2d79d1b55a3b6abc9d0f0c#ghc96-iog-full" \
+            --command bash -c "cabal update"
+
+      - name: cabal build
+        run: |
+          nix develop "github:input-output-hk/devx?rev=d316c0394de3c72abd2d79d1b55a3b6abc9d0f0c#ghc96-iog-full" \
+            --command bash -c "cabal build all"
+
+      - name: cabal test
+        run: |
+          nix develop "github:input-output-hk/devx?rev=d316c0394de3c72abd2d79d1b55a3b6abc9d0f0c#ghc96-iog-full" \
+            --command bash -c "cabal test --test-show-details=streaming"

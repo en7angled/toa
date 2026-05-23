@@ -1,0 +1,78 @@
+#HASKELL
+dist
+dist-*
+cabal-dev
+.cabal
+.cabal-fmt*
+*.o
+*.hi
+*.hie
+*.chi
+*.chs.h
+*.dyn_o
+*.dyn_hi
+.hpc
+.hsenv
+.cabal-sandbox/
+cabal.sandbox.config
+*.prof
+*.aux
+*.hp
+*.eventlog
+.stack-work/
+cabal.project.local
+cabal.project.local~
+
+
+.HTF/
+.ghc.environment.*
+
+compiled
+
+#PURESCRIPT
+
+# Dependencies
+.psci_modules
+.spago
+bower_components
+node_modules
+
+# Generated files
+.psci
+output
+
+.direnv
+
+# Other
+.env
+*.DS_STORE
+*.link
+.pre-commit-config.yaml
+
+result
+result-*
+
+# Cardano
+
+*.skey
+*.prv
+
+db/
+
+# Real Atlas config (contains Maestro token)
+config/config_atlas.json
+
+# Local-only files
+.psc-ide-port
+
+# Benchmark run output (baseline.json IS committed)
+bench/results.json
+
+# IDE / AI tooling — local only
+.cursor/
+.claude/
+.vscode/
+CLAUDE.md
+
+# Draft CIP — kept private until CIP PR
+Objective.md

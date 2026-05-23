@@ -1,0 +1,19 @@
+# Local dev state — never ship in build context
+.git
+.direnv
+.cabal
+dist-newstyle
+result
+result-*
+
+# Editor / agent state
+.vscode
+.cursor
+.claude
+
+# Local env files
+.env
+
+# Dockerfiles themselves (build context only needs their referenced sources)
+Dockerfile.*
+.dockerignore
