@@ -9,6 +9,10 @@ maintainer:    georgescumarius@live.com
 category:      Web3
 build-type:    Simple
 
+extra-source-files:
+  validators/FLAT_PREFIX_TOA_V1.bin
+  validators/FLAT_SUFFIX_TOA_V1.bin
+
 
 common common-options
   ghc-options:      -Wall
@@ -46,6 +50,7 @@ library onchain-lib
   default-language:   Haskell2010
   hs-source-dirs:     src/lib/onchain-lib
   exposed-modules:
+    Onchain.Derivation.R
     Onchain.Protocol.Types
     Onchain.Utils
     Onchain.Validators.ToaV1Validator
@@ -56,6 +61,8 @@ library onchain-lib
   build-depends:
     , bytestring
     , containers
+    , file-embed
+    , mtl
 
   --- Cardano specific dependencies
   build-depends:
@@ -168,6 +175,7 @@ library offchain-lib
     TxBuilding.Interactions
     TxBuilding.Toa.Address
     TxBuilding.Toa.Conversions
+    TxBuilding.Toa.DerivationR
     TxBuilding.Toa.Fingerprint
     TxBuilding.Toa.Query
     TxBuilding.Toa.Skeletons
@@ -184,6 +192,7 @@ library offchain-lib
     , containers
     , crypton
     , deriving-aeson
+    , file-embed
     , memory
     , onchain-lib
     , serialise
@@ -243,6 +252,22 @@ executable toa-bench
     , plutus-ledger-api:plutus-ledger-api-testlib
     , plutus-tx
     , text
+
+executable toa-verify-reconstruction
+  import:           common-options
+  default-language: GHC2021
+  hs-source-dirs:   src/exe/toa-verify-reconstruction
+  main-is:          Main.hs
+  build-depends:
+    , base
+    , base16-bytestring
+    , bytestring
+    , crypton
+    , memory
+    , mtl
+    , plutus-core
+    , plutus-ledger-api
+    , serialise
 
 library webapi-lib
   import:             common-options
@@ -346,6 +371,7 @@ test-suite toa-tests
     Test.Skeleton
     UnitTests
     UnitTests.Conversions
+    UnitTests.Derivation.RTest
     UnitTests.DeriveTrace
     UnitTests.Validator
     UnitTests.Validator.Scenarios

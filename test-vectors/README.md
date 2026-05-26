@@ -19,9 +19,10 @@ The vectors are generated deterministically from the canonical Plinth source by 
       "cip14_fingerprint": "asset1...",
 
       "params_cbor_hex": "<canonical PlutusData CBOR of TOAParamsV1>",
-      "unapplied_script_hash": "129181a58ca3716aada61244d3d4210bff5a7235f709189af2596dc0",
+      "unapplied_script_hash": "b4e7310faacb77c9e5a68f325eb348a93d2025ecf472bc43007d5e1c",
       "applied_script_cbor_hex": "<CBOR of applied script bytes — the bytes that go into the tx `script` field>",
-      "applied_script_bytes": 551,
+      "applied_script_bytes": 603,
+      "flat_body_length": 582,
 
       "expected_script_hash": "<28-byte hex>",
       "expected_address_mainnet": "addr1...",
@@ -35,7 +36,7 @@ The vectors are generated deterministically from the canonical Plinth source by 
 
 ## Top-level envelope fields
 
-- `unapplied_script_bytes` — size in bytes of the canonical un-applied UPLC artifact, factored out of each vector because it is a single global value (476 in the current publication). A mismatch here points to a Plinth or toolchain version drift before any per-vector check.
+- `unapplied_script_bytes` — size in bytes of the canonical un-applied UPLC artifact, factored out of each vector because it is a single global value (529 in the current publication). A mismatch here points to a Plinth or toolchain version drift before any per-vector check.
 - `max_reference_script_bytes` — the Cardano reference-script size ceiling per transaction (16384). Included so vector consumers can confirm at a glance that the un-applied template and every applied script stay well within the limit when published as a reference script.
 - `vectors` — the array of per-`(toa_version, policy_id, asset_name)` records described below.
 
@@ -43,11 +44,12 @@ The vectors are generated deterministically from the canonical Plinth source by 
 
 - `cip14_fingerprint` is `bech32(hrp = "asset", blake2b-160(policy_id || asset_name))` as defined by [CIP-0014](https://cips.cardano.org/cip/CIP-0014). It is included only as a user-facing identifier and diagnostic cross-check on `(policy_id, asset_name_hex)`: an implementation that has the wrong asset-class bytes will fail the fingerprint check before reaching address derivation, yielding a much clearer diagnostic than a downstream script-hash mismatch. Because the fingerprint is one-way, resolving `asset1...` back to `(policy_id, asset_name)` requires an indexer, explorer, or wallet asset database. The fingerprint is **not** an input to TOA address derivation.
 
-- `params_cbor_hex`, `unapplied_script_hash`, `applied_script_cbor_hex`, and `applied_script_bytes` are **debug-aid fields** included in every vector so implementers can locate failures along the encoding chain. Concretely:
+- `params_cbor_hex`, `unapplied_script_hash`, `applied_script_cbor_hex`, `applied_script_bytes`, and `flat_body_length` are **debug-aid fields** included in every vector so implementers can locate failures along the encoding chain. Concretely:
     - `params_cbor_hex` is the canonical PlutusData CBOR of the `TOAParamsV1` argument. A mismatch here points to a parameter-encoding bug (CDDL serialisation, integer minimality, or constructor-tag form).
-    - `unapplied_script_hash` is the template hash *before* parameter application — `blake2b_224(0x03 || unapplied_script_bytes)`. It is constant across every v1 vector (`129181a58ca3716aada61244d3d4210bff5a7235f709189af2596dc0`). A mismatch points to a Plinth or toolchain version drift.
+    - `unapplied_script_hash` is the template hash *before* parameter application — `blake2b_224(0x03 || unapplied_script_bytes)`. It is constant across every v1 vector (`b4e7310faacb77c9e5a68f325eb348a93d2025ecf472bc43007d5e1c`). A mismatch points to a Plinth or toolchain version drift.
     - `applied_script_cbor_hex` is the CBOR of the applied script bytes — the same bytes that go into a transaction's `script` field. A mismatch here points to a parameter-application bug. If this matches but `expected_script_hash` does not, the bug is in the hashing path.
     - `applied_script_bytes` is the byte length of `applied_script_cbor_hex` after hex decode — useful for confirming reference-script sizing.
+    - `flat_body_length` is `len(FLAT_PREFIX_TOA_V1) + 1 (chunk-length byte) + len(params_cbor_hex)/2 + 1 (0x00 terminator) + len(FLAT_SUFFIX_TOA_V1)` — the payload length encoded in the outer CBOR major-type-2 header. Provided redundantly as a debugging aid for byte-level R derivation (see TOA CIP §"Address Derivation"): an implementation whose `applied_script_cbor_hex` does not reproduce often catches the first divergence here.
 
 - `datum_policy` documents the canonical deposit convention exercised by the vector. Address-derivation vectors use `inline_unit_recommended` to mark that the derived TOA is intended to be funded with the canonical inline `Unit Datum` deposit pattern. Validator-scenario vectors (when published) will extend the enum to cover the four-way datum-classification set — `unit_datum`, `inline_other`, `datum_hash`, `no_datum` — so each scenario records which datum class the spent UTxO actually carries.
 

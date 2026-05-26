@@ -1,0 +1,151 @@
+direnv: loading ~/Projects/CardanoProjects/toa/.envrc
+direnv: loading https://raw.githubusercontent.com/nix-community/nix-direnv/3.0.6/direnvrc (sha256-RYcUJaRMf8oF5LznDrlCXbkOQrywm0HDv1VjYGaJGdM=)
+fetching github input 'github:NixOS/nixpkgs/nixpkgs-unstable'
+direnv: using flake github:input-output-hk/devx?rev=d316c0394de3c72abd2d79d1b55a3b6abc9d0f0c#ghc96-iog-full
+direnv: nix-direnv: Using cached dev shell
+                                                                     
+ _____ _____ _____    _____         _       _ _    _____ _       _ _ 
+|     |     |   __|  |  |  |___ ___| |_ ___| | |  |   __| |_ ___| | |
+|-   -|  |  |  |  |  |     | .'|_ -| '_| -_| | |  |__   |   | -_| | |
+|_____|_____|_____|  |__|__|__,|___|_,_|___|_|_|  |_____|_|_|___|_|_|
+                                                                     
+Revision (input-output-hk/devx): d316c0394de3c72abd2d79d1b55a3b6abc9d0f0c.
+CABAL_DIR set to /Users/mg/.cabal-devx
+
+Linked /nix/store/835sx0lfi7gl9p3xmr5za8gjgbhl7bj3-haskell-language-server-exe-haskell-language-server-2.9.0.1/bin/haskell-language-server to .vscode/haskell-language-server.link
+fetching github input 'github:NixOS/nixpkgs/nixpkgs-unstable'
+fetching github input 'github:NixOS/nixpkgs/nixpkgs-unstable'
+5.8.3
+Cardano DApp environment loaded successfully
+Configuration is affected by the following files:
+- cabal.project
+- cabal.project.freeze
+Resolving dependencies...
+Encoder identity check: PASS
+  method: plutus-core Data CBOR structural assertion battery
+          (Constr 0 tag 0xd8 0x79, indefinite-length 0x9f..0xff
+           field array, smallest-form integer + bytestring headers)
+Unapplied artifact: validators/ToaV1.uplc
+Unapplied size:     529 bytes
+
+=== asset_name_len=0 ===
+  applied size:        570 bytes
+  outer CBOR header:   590237 (declares 567B payload)
+  flat body size:      567 bytes
+  param CBOR size:     36 bytes
+  param CBOR matches:  1 occurrence(s)
+  RESULT: unique decomposition
+    flat_prefix len: 529  flat_suffix len: 2
+    flat_prefix head (16B): 01010032259932323255333573466e1d
+    flat_suffix (full):     0001
+
+=== asset_name_len=1 ===
+  applied size:        571 bytes
+  outer CBOR header:   590238 (declares 568B payload)
+  flat body size:      568 bytes
+  param CBOR size:     37 bytes
+  param CBOR matches:  1 occurrence(s)
+  RESULT: unique decomposition
+    flat_prefix len: 529  flat_suffix len: 2
+    flat_prefix head (16B): 01010032259932323255333573466e1d
+    flat_suffix (full):     0001
+
+=== asset_name_len=16 ===
+  applied size:        586 bytes
+  outer CBOR header:   590247 (declares 583B payload)
+  flat body size:      583 bytes
+  param CBOR size:     52 bytes
+  param CBOR matches:  1 occurrence(s)
+  RESULT: unique decomposition
+    flat_prefix len: 529  flat_suffix len: 2
+    flat_prefix head (16B): 01010032259932323255333573466e1d
+    flat_suffix (full):     0001
+
+=== asset_name_len=23 ===
+  applied size:        593 bytes
+  outer CBOR header:   59024e (declares 590B payload)
+  flat body size:      590 bytes
+  param CBOR size:     59 bytes
+  param CBOR matches:  1 occurrence(s)
+  RESULT: unique decomposition
+    flat_prefix len: 529  flat_suffix len: 2
+    flat_prefix head (16B): 01010032259932323255333573466e1d
+    flat_suffix (full):     0001
+
+=== asset_name_len=24 ===
+  applied size:        595 bytes
+  outer CBOR header:   590250 (declares 592B payload)
+  flat body size:      592 bytes
+  param CBOR size:     61 bytes
+  param CBOR matches:  1 occurrence(s)
+  RESULT: unique decomposition
+    flat_prefix len: 529  flat_suffix len: 2
+    flat_prefix head (16B): 01010032259932323255333573466e1d
+    flat_suffix (full):     0001
+
+=== asset_name_len=25 ===
+  applied size:        596 bytes
+  outer CBOR header:   590251 (declares 593B payload)
+  flat body size:      593 bytes
+  param CBOR size:     62 bytes
+  param CBOR matches:  1 occurrence(s)
+  RESULT: unique decomposition
+    flat_prefix len: 529  flat_suffix len: 2
+    flat_prefix head (16B): 01010032259932323255333573466e1d
+    flat_suffix (full):     0001
+
+=== asset_name_len=31 ===
+  applied size:        602 bytes
+  outer CBOR header:   590257 (declares 599B payload)
+  flat body size:      599 bytes
+  param CBOR size:     68 bytes
+  param CBOR matches:  1 occurrence(s)
+  RESULT: unique decomposition
+    flat_prefix len: 529  flat_suffix len: 2
+    flat_prefix head (16B): 01010032259932323255333573466e1d
+    flat_suffix (full):     0001
+
+=== asset_name_len=32 ===
+  applied size:        603 bytes
+  outer CBOR header:   590258 (declares 600B payload)
+  flat body size:      600 bytes
+  param CBOR size:     69 bytes
+  param CBOR matches:  1 occurrence(s)
+  RESULT: unique decomposition
+    flat_prefix len: 529  flat_suffix len: 2
+    flat_prefix head (16B): 01010032259932323255333573466e1d
+    flat_suffix (full):     0001
+
+=== Invariance check (over flat body, header excluded) ===
+  cases with unique decomposition: 8/8
+  distinct outer-prefix values:    8
+  distinct outer-suffix values:    1
+
+HYPOTHESIS HOLDS (chunked-bytestring frame around param).
+  FLAT_PREFIX_TOA_V1 (528 bytes):
+    hex:           01010032259932323255333573466e1d200000211328009bad35742005375c6ae840066eb8d5d09aba20011aba200111635573c0046aae74004dd50014888c8c8c8c954ccd5cd19b8748008d55ce800889929991914aa999ab9a3370e90004ac998011ba900a37566ae84d5d11aba200690c004dd5800a30024a564cc00cdd4805000c860026eb400518012400348001480002300011801454cc8c8a554ccd5cd19b8748008ccc8c00400488cc02000488c8ccc01cd5d09aba200122223370066601201201000c66601800602c02a52d61aab9e375400490001bac3574201423000118014554ccd5cd19b8748008ccc8c00400488cc02000488ccc0180088888cdc019980400400380299980580180a80a14b5890001bac3574201223000118014004444646464666600a6ae8400cdd59aba100235742002646464aa666ae68cdc3a4004004230021155333573466e1d2000002118009bae3574200211635573c0046aae74004dd51aba1357440026ae88004d5d10009aab9e375400644526600a6ea400800e46526600e6ea400c00646eb400690000dd5800d20000c00a00223223500200133230010012213300480112a999ab9a3375e0086aae7400444a0026aae7800822a660060062400224002444a666aae7c004400c4cc008d5d08009aba200118011aab9e00111637546ae84d5d11aba2003357446ae88004d55cf1baa357420026aae78dd50022293458981
+    blake2b-256:   6ab7ef002cda6f7e3c60e5975fce175c6e56a91b51b7d488d2ae69af23520235
+  FLAT_SUFFIX_TOA_V1 (1 byte):
+    hex:           01
+    blake2b-256:   ee155ace9c40292074cb6aff8c9ccdd273c81648ff1149ef36bcea6ebb8a3e25
+
+  applied_bytes(p) ==
+      CBOR_BYTESTRING_HEADER(len_flat_body)
+    || FLAT_PREFIX_TOA_V1
+    || consByteString(len(serialiseData(p)), serialiseData(p))
+    || 0x00
+    || FLAT_SUFFIX_TOA_V1
+  with FLAT_PREFIX/FLAT_SUFFIX byte-invariant across all tested lengths.
+
+=== End-to-end hash check (R vs apply_params) ===
+  len=0  hashR=7e6f10d86fabd455be6a642ba77066eb005c7c539ca46eac73c6dea8  OK
+  len=1  hashR=5ef4262b13c4fa658f658b05e9148470b47196f0d73cce1eb1b9f9b6  OK
+  len=16  hashR=b6f4d1de62325b25ef7853c377e509a1e047fefd9e010a3275b6a9af  OK
+  len=23  hashR=b4631ef14e89f55b5de5b91cec2cb029bd5cd0a3265e6e6bc2c28638  OK
+  len=24  hashR=5e49dc94cb36c2afb13ddeac85e7f49d15490530839ddfd3486b82e0  OK
+  len=25  hashR=81b51682e3ebc4b9d444456d530d88f4ea78d9cfcb0920d6f61cc228  OK
+  len=31  hashR=9dcd5d8754c2c1a16b8bf8fce7a9fc9ce9b7eb07f5577171eefd29b9  OK
+  len=32  hashR=2f778b428b60c0962a63b65bb465bbe7b45fc368db08101760d4cc6b  OK
+End-to-end hash check: PASS for all tested lengths
+
+Wrote validators/FLAT_PREFIX_TOA_V1.bin and validators/FLAT_SUFFIX_TOA_V1.bin

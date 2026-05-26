@@ -28,7 +28,7 @@ import Data.SatInt (unSatInt)
 import Data.Text (Text)
 import Data.Text qualified as T
 import Onchain.Protocol.Types (TOAParamsV1)
-import Onchain.Validators.ToaV1Validator (toaV1Apply)
+import Onchain.Validators.ToaV1Validator (toaV1ApplyConstantData)
 import PlutusCore.Evaluation.Machine.ExBudget (ExBudget (..))
 import PlutusCore.Evaluation.Machine.ExMemory (ExCPU (..), ExMemory (..))
 import PlutusLedgerApi.Common.Versions (futurePV)
@@ -101,7 +101,7 @@ runScenario ec Scenario {scName, scExpect, scParams, scContextData} =
             (Left err, Pass) ->
               failureWithLogs' txtLogs (T.pack (show err))
   where
-    serialised = V3.serialiseCompiledCode (toaV1Apply scParams)
+    serialised = toaV1ApplyConstantData scParams
     expectedText = case scExpect of
       Pass -> "Pass"
       FailWith reason -> "FailWith " <> reason

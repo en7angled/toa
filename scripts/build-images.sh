@@ -8,6 +8,9 @@ set -euo pipefail
 #
 # Env:
 #   IMAGE_PREFIX   Docker registry/user prefix (default: mariusgeorgescu)
+#   PUSH           If "true", build base + service images multi-arch and push to
+#                  the registry. Otherwise build for the host arch only and load
+#                  into the local docker daemon.
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
@@ -17,46 +20,46 @@ if [[ -z "${TAG}" ]]; then
 fi
 
 IMAGE_PREFIX="${IMAGE_PREFIX:-mariusgeorgescu}"
+PUSH="${PUSH:-false}"
+
+BUILDER_VERSION="9.6.6"
+RUNTIME_TAG="3.20"
+BUILDER_IMAGE="${IMAGE_PREFIX}/toa-builder:${BUILDER_VERSION}"
+RUNTIME_IMAGE="${IMAGE_PREFIX}/toa-runtime-base:${RUNTIME_TAG}"
 
 echo "Building images with tag: ${TAG}"
 echo "Image prefix: ${IMAGE_PREFIX}"
 
-# Determine buildx flags
-PUSH="${PUSH:-false}"
 if [[ "${PUSH}" == "true" ]]; then
-  echo "ERROR: PUSH=true is not supported with the local shared base image 'toa-builder'." >&2
-  echo "Please publish a multi-arch builder image and update Dockerfiles to reference it (e.g. ${IMAGE_PREFIX}/toa-builder:9.6.6), or run with PUSH=false." >&2
-  exit 1
+  BUILDX_FLAGS=(--platform "linux/amd64,linux/arm64" --push)
+  echo "Push mode: building multi-arch (linux/amd64,linux/arm64) and pushing to registry"
+else
+  ARCH="$(uname -m)"
+  case "${ARCH}" in
+    x86_64|amd64) NATIVE_PLATFORM="linux/amd64" ;;
+    arm64|aarch64) NATIVE_PLATFORM="linux/arm64" ;;
+    *) echo "Unsupported host arch: ${ARCH}" >&2; exit 1 ;;
+  esac
+  BUILDX_FLAGS=(--platform "${NATIVE_PLATFORM}" --load)
+  echo "Local mode: building for ${NATIVE_PLATFORM} and loading locally"
 fi
-
-# Load only the host architecture into the local docker daemon
-ARCH="$(uname -m)"
-case "${ARCH}" in
-  x86_64|amd64) NATIVE_PLATFORM="linux/amd64" ;;
-  arm64|aarch64) NATIVE_PLATFORM="linux/arm64" ;;
-  *) echo "Unsupported host arch: ${ARCH}" >&2; exit 1 ;;
-esac
-BUILDX_FLAGS=(--platform "${NATIVE_PLATFORM}" --load)
-echo "Local mode: building for ${NATIVE_PLATFORM} and loading locally"
 
 cd "${ROOT_DIR}"
 
 # Build shared builder base (toolchain + cached deps; stable across source changes)
-BUILDER_VERSION="9.6.6"
-echo "Building shared builder base: toa-builder:${BUILDER_VERSION}"
+echo "Building shared builder base: ${BUILDER_IMAGE}"
 docker buildx build \
   "${BUILDX_FLAGS[@]}" \
   -f Dockerfile.base \
-  -t toa-builder:${BUILDER_VERSION} \
+  -t "${BUILDER_IMAGE}" \
   .
 
 # Build shared runtime base (crypto libs; stable unless versions change)
-RUNTIME_TAG="3.20"
-echo "Building shared runtime base: toa-runtime-base:${RUNTIME_TAG}"
+echo "Building shared runtime base: ${RUNTIME_IMAGE}"
 docker buildx build \
   "${BUILDX_FLAGS[@]}" \
   -f Dockerfile.runtime-base \
-  -t toa-runtime-base:${RUNTIME_TAG} \
+  -t "${RUNTIME_IMAGE}" \
   .
 
 # Interaction API
@@ -67,5 +70,11 @@ docker buildx build \
   .
 
 echo ""
-echo "Built images:"
+if [[ "${PUSH}" == "true" ]]; then
+  echo "Pushed images:"
+else
+  echo "Built images:"
+fi
+echo "  ${BUILDER_IMAGE}"
+echo "  ${RUNTIME_IMAGE}"
 echo "  ${IMAGE_PREFIX}/toa-interaction-api:${TAG}"

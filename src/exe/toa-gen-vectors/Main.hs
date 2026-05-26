@@ -37,9 +37,9 @@ import GeniusYield.Types
     tokenNameFromPlutus,
   )
 import Onchain.Protocol.Types (TOAParamsV1 (..))
-import Onchain.Validators.ToaV1Validator (toaV1Apply)
+import Onchain.Validators.ToaV1Validator (toaV1ApplyConstantData)
+import TxBuilding.Toa.DerivationR qualified as R
 import PlutusLedgerApi.V1.Value (CurrencySymbol (..), TokenName (..))
-import PlutusLedgerApi.V3 (serialiseCompiledCode)
 import PlutusTx.Builtins (toBuiltin)
 import System.Directory (createDirectoryIfMissing)
 import Text.Printf (printf)
@@ -98,6 +98,7 @@ data Vector = Vector
     vUnappliedScriptHash :: Text,
     vAppliedScriptCborHex :: Text,
     vAppliedScriptBytes :: Int,
+    vFlatBodyLength :: Int,
     vExpectedScriptHash :: Text,
     vExpectedAddressMainnet :: Text,
     vExpectedAddressTestnet :: Text,
@@ -158,7 +159,16 @@ main = do
 
 mkVector :: (Text, TOAParamsV1) -> Vector
 mkVector (n, p@TOAParamsV1 {..}) =
-  let appliedBytes = SBS.fromShort (serialiseCompiledCode (toaV1Apply p))
+  let appliedBytes = SBS.fromShort (toaV1ApplyConstantData p)
+      paramBytes   = paramsCborBytes p
+      -- flat_body_length = len(FLAT_PREFIX) + 1 (chunk-length byte)
+      --                  + len(paramCbor) + 1 (0x00 chunk-terminator)
+      --                  + len(FLAT_SUFFIX)
+      flatBodyLen  = BS.length R.flatPrefixToaV1
+                   + 1
+                   + BS.length paramBytes
+                   + 1
+                   + BS.length R.flatSuffixToaV1
    in Vector
         { vName = n,
           vToaVersion = toaVersion,
@@ -168,10 +178,11 @@ mkVector (n, p@TOAParamsV1 {..}) =
             Lib.cip14Fingerprint
               (either (error . show) id (mintingPolicyIdFromCurrencySymbol toaPolicyId))
               (Data.Maybe.fromMaybe (error "tokenNameFromPlutus: asset name too large") (tokenNameFromPlutus toaAssetName)),
-          vParamsCborHex = hex (paramsCborBytes p),
+          vParamsCborHex = hex paramBytes,
           vUnappliedScriptHash = hex toaV1UnappliedHashBytes,
           vAppliedScriptCborHex = hex appliedBytes,
           vAppliedScriptBytes = BS.length appliedBytes,
+          vFlatBodyLength = flatBodyLen,
           vExpectedScriptHash = hex (scriptHashRawBytes (toaV1ScriptHash p)),
           vExpectedAddressMainnet = addressToText (toaAddress GYMainnet p),
           vExpectedAddressTestnet = addressToText (toaAddress GYTestnetPreprod p),

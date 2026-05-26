@@ -14,7 +14,8 @@ RUN apk add --no-cache \
     libstdc++ \
     gmp \
     libgcc \
-    xz-libs
+    xz-libs \
+    postgresql-libs
 
 # libsodium 1.0.19 (for libsodium.so.26)
 RUN apk add --no-cache --virtual .build-deps \

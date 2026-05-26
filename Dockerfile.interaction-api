@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.4
 
 ### STAGE 1: Build ###
-FROM --platform=$TARGETPLATFORM toa-builder:9.6.6 AS builder
+FROM --platform=$TARGETPLATFORM mariusgeorgescu/toa-builder:9.6.6 AS builder
 
 WORKDIR /cardano-toa
 
@@ -21,7 +21,7 @@ RUN cabal install interaction-api \
     --ghc-options="-optl=-static -optl=-pthread -optc=-static"
 
 ### STAGE 2: Runtime ###
-FROM --platform=$TARGETPLATFORM toa-runtime-base:3.20 AS runtime
+FROM --platform=$TARGETPLATFORM mariusgeorgescu/toa-runtime-base:3.20 AS runtime
 
 WORKDIR /app
 COPY --from=builder /cardano-toa/interaction-api /app/interaction-api
